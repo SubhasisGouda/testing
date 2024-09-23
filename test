@@ -1,0 +1,266 @@
+// import React, { useState, useEffect } from 'react';
+// import largeData from './data.json'; // Import the JSON file (if local)
+
+// const UserComponent = () => {
+//     // Define state to store the list of users
+//     const [users, setUsers] = useState([]);
+//     const [searchTerm, setSearchTerm] = useState('');
+//     const [selectedUser, setSelectedUser] = useState(null);
+
+//     // Function to extract and set user data
+//     const fetchUserData = async () => {
+//         try {
+            
+//             const extractedUsers = largeData.feed.entry.map(entry => {
+//                 const properties = entry.content[0]["m:properties"][0];
+//                 return {
+//                     name: properties["d:Title"][0], // Extract the name
+//                     email: properties["d:Email"][0] // Extract the email
+//                 };
+//             });
+    
+//             // Store the extracted users in state
+//             setUsers(extractedUsers);
+//         } catch (error) {
+//             console.error('Error fetching data:', error);
+//         }
+//     };
+
+//     const handlePostOperation = () => {
+//         if (selectedUser) {
+//             console.log('Posting data:', selectedUser);
+          
+//         } else {
+//             console.log('No user selected');
+//         }
+//     };
+
+//     // Load data once when the component is mounted
+//     useEffect(() => {
+//         fetchUserData();
+//     }, []);
+
+//     const filteredUsers = users.filter(user =>
+//         user.name.toLowerCase().includes(searchTerm.toLowerCase())
+//     );
+
+//     // Handle the user selection
+//     const handleSelectUser = (e) => {
+//         const selectedName = e.target.value;
+//         const user = users.find(user => user.name === selectedName);
+//         setSelectedUser(user);
+//     };
+
+//     return (
+//         <div>
+//             <h1>User List</h1>
+//             <h1>User Search and Select</h1>
+            
+//             {/* Search input field */}
+//             <input
+//                 type="text"
+//                 placeholder="Search user by name"
+//                 value={searchTerm}
+//                 onChange={(e) => setSearchTerm(e.target.value)}
+//             />
+
+//             {/* Dropdown select for users */}
+//             <select onChange={handleSelectUser} defaultValue="">
+//                 <option value="" disabled>Select a user</option>
+//                 {filteredUsers.map((user, index) => (
+//                     <option key={index} value={user.name}>
+//                         {user.name} - {user.email}
+//                     </option>
+//                 ))}
+//             </select>
+
+//             {/* Button to trigger post operation */}
+//             <button onClick={handlePostOperation}>
+//                 Submit Selected User
+//             </button>
+            
+//         </div>
+//     );
+// };
+
+// export default UserComponent;
+
+
+// // import React, { useState, useEffect } from 'react';
+
+// // const UserComponent = () => {
+// //     const [users, setUsers] = useState([]);
+// //     const [searchTerm, setSearchTerm] = useState('');
+// //     const [selectedUser, setSelectedUser] = useState(null);
+
+// //     // Fetch user data from API
+// //     const fetchUserData = async () => {
+// //         try {
+            
+// //             const extractedUsers = largeData.feed.entry.map(entry => {
+// //                 const properties = entry.content[0]["m:properties"][0];
+// //                 return {
+// //                     name: properties["d:Title"][0], // Extract the name
+// //                     email: properties["d:Email"][0] // Extract the email
+// //                 };
+// //             });
+    
+// //             // Store the extracted users in state
+// //             setUsers(extractedUsers);
+// //         } catch (error) {
+// //             console.error('Error fetching data:', error);
+// //         }
+// //     };
+
+// //     useEffect(() => {
+// //         fetchUserData();
+// //     }, []);
+
+// //     // Filter users based on search term
+// //     const filteredUsers = users.filter(user =>
+// //         user.name.toLowerCase().includes(searchTerm.toLowerCase())
+// //     );
+
+// //     // Handle the user selection
+// //     const handleSelectUser = (e) => {
+// //         const selectedName = e.target.value;
+// //         const user = users.find(user => user.name === selectedName);
+// //         setSelectedUser(user);
+// //     };
+
+// //     // Post operation (mocked)
+//     // const handlePostOperation = () => {
+//     //     if (selectedUser) {
+//     //         console.log('Posting data:', selectedUser);
+//     //         // Here you can implement your POST request logic to send `selectedUser` data
+//     //         // Example:
+//     //         // fetch('https://api.example.com/post', {
+//     //         //   method: 'POST',
+//     //         //   headers: {
+//     //         //     'Content-Type': 'application/json',
+//     //         //   },
+//     //         //   body: JSON.stringify(selectedUser),
+//     //         // });
+//     //     } else {
+//     //         console.log('No user selected');
+//     //     }
+//     // };
+
+// //     return (
+// //         <div>
+// //             <h1>User Search and Select</h1>
+            
+// //             {/* Search input field */}
+// //             <input
+// //                 type="text"
+// //                 placeholder="Search user by name"
+// //                 value={searchTerm}
+// //                 onChange={(e) => setSearchTerm(e.target.value)}
+// //             />
+
+// //             {/* Dropdown select for users */}
+// //             <select onChange={handleSelectUser} defaultValue="">
+// //                 <option value="" disabled>Select a user</option>
+// //                 {filteredUsers.map((user, index) => (
+// //                     <option key={index} value={user.name}>
+// //                         {user.name} - {user.email}
+// //                     </option>
+// //                 ))}
+// //             </select>
+
+// //             {/* Button to trigger post operation */}
+// //             <button onClick={handlePostOperation}>
+// //                 Submit Selected User
+// //             </button>
+// //         </div>
+// //     );
+// // };
+
+// // export default UserComponent;
+
+import React, { useState, useEffect } from 'react';
+import largeData from './data.json'; // Import the JSON file (if local)
+
+const UserComponent = () => {
+    const [users, setUsers] = useState([]);        // Store the list of users
+    const [searchTerm, setSearchTerm] = useState('');  // Store the search term
+    const [selectedUser, setSelectedUser] = useState(null);  // Store the selected user
+
+    // Function to extract and set user data
+    const fetchUserData = async () => {
+        try {
+            const extractedUsers = largeData.feed.entry.map(entry => {
+                const properties = entry.content[0]["m:properties"][0];
+                return {
+                    name: properties["d:Title"][0], // Extract the name
+                    email: properties["d:Email"][0] // Extract the email
+                };
+            });
+            setUsers(extractedUsers);  // Store the extracted users in state
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserData();
+    }, []);
+
+    // Filter users based on the search term
+    const filteredUsers = users.filter(user =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Handle the input blur event to select a user if valid
+    const handleBlur = () => {
+        const user = users.find(user => user.name === searchTerm);
+        if (user) {
+            setSelectedUser(user);  // Set the selected user if found
+        } else {
+            setSelectedUser(null);  // Clear the selection if invalid
+        }
+    };
+
+    // Handle the submission (mocked post operation)
+    const handlePostOperation = () => {
+        if (selectedUser) {
+            console.log('Posting data:', selectedUser);
+            // Implement your actual post request logic here
+        } else {
+            console.log('No valid user selected');
+        }
+    };
+
+    return (
+        <div>
+            <h1>User Search and Select</h1>
+            
+            {/* Search and select combined component */}
+            <input
+                type="text"
+                placeholder="Search user by name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onBlur={handleBlur}  // Handle onBlur to check for a valid user
+                list="userList"
+            />
+
+            {/* Dropdown list based on the search term */}
+            <datalist id="userList">
+                {filteredUsers.map((user, index) => (
+                    <option key={index} value={user.name}>
+                        {user.name} - {user.email}
+                    </option>
+                ))}
+            </datalist>
+
+            {/* Button to trigger post operation */}
+            <button onClick={handlePostOperation}>
+                Submit Selected User
+            </button>
+        </div>
+    );
+};
+
+export default UserComponent;
+
