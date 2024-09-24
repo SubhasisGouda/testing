@@ -1,0 +1,57 @@
+using Microsoft.SharePoint.Client;
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // SharePoint Site URL
+        string siteUrl = "https://yoursite.sharepoint.com/sites/yoursite";
+
+        // User credentials (for authentication)
+        string username = "yourusername@yoursite.com";
+        string password = "yourpassword"; // Consider using SecureString in production
+
+        // List name
+        string listName = "MyCustomList";
+
+        // Create a new SharePoint client context
+        using (ClientContext context = new ClientContext(siteUrl))
+        {
+            // Credentials for SharePoint Online (Use Office 365 authentication)
+            context.Credentials = new SharePointOnlineCredentials(username, GetSecureString(password));
+
+            // Get the web (site) and the list by title
+            Web web = context.Web;
+            List list = web.Lists.GetByTitle(listName);
+
+            // Prepare the new list item
+            ListItemCreationInformation itemCreateInfo = new ListItemCreationInformation();
+            ListItem newItem = list.AddItem(itemCreateInfo);
+
+            // Add data to the list item (field names must match column internal names in SharePoint)
+            newItem["Title"] = "New Item Title";
+            newItem["Email"] = "newuser@example.com";
+
+            // Submit the new item to the list
+            newItem.Update();
+
+            // Execute the query to add the item
+            context.ExecuteQuery();
+
+            Console.WriteLine("Item added successfully.");
+        }
+    }
+
+    // Helper method to convert password into SecureString
+    static SecureString GetSecureString(string password)
+    {
+        SecureString securePassword = new SecureString();
+        foreach (char c in password)
+        {
+            securePassword.AppendChar(c);
+        }
+        securePassword.MakeReadOnly();
+        return securePassword;
+    }
+}
